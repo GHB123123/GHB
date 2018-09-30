@@ -172,3 +172,121 @@ v-for 可以绑定数据到数组来渲染一个列表,也可以用 v-for 通过
       </li>
     </ul>
     <p v-else>No todos left!</p>
+
+# 6.计算属性和侦听器
+
+1)计算属性
+模板内的表达式非常便利，但是设计它们的初衷是用于简单运算的。在模板中放入太多的逻辑会让模板过重且难以维护。例如：
+
+    <div id="example">
+      {{ message.split('').reverse().join('') }}
+    </div>
+    
+在这个地方，模板不再是简单的声明式逻辑。你必须看一段时间才能意识到，这里是想要显示变量 message 的翻转字符串。当你想要在模板中多次引用此处的翻转字符串时，就会更加难以处理。
+
+所以，对于任何复杂逻辑，你都应当使用计算属性。
+
+2)计算属性 vs 侦听属性
+
+Vue 提供了一种更通用的方式来观察和响应 Vue 实例上的数据变动：侦听属性。当你有一些数据需要随着其它数据变动而变动时，你很容易滥用 watch——特别是如果你之前使用过 AngularJS。然而，通常更好的做法是使用计算属性而不是命令式的 watch 回调。
+
+3)计算属性的 setter
+
+计算属性默认只有 getter ，不过在需要时你也可以提供一个 setter ：
+
+    // ...
+    computed: {
+      fullName: {
+        // getter
+        get: function () {
+          return this.firstName + ' ' + this.lastName
+        },
+        // setter
+        set: function (newValue) {
+          var names = newValue.split(' ')
+          this.firstName = names[0]
+          this.lastName = names[names.length - 1]
+        }
+      }
+    }
+    // ...
+    
+现在再运行 vm.fullName = 'John Doe' 时，setter 会被调用，vm.firstName 和 vm.lastName 也会相应地被更新。
+
+4)侦听器
+
+虽然计算属性在大多数情况下更合适，但有时也需要一个自定义的侦听器。这就是为什么 Vue 通过 watch 选项提供了一个更通用的方法，来响应数据的变化。当需要在数据变化时执行异步或开销较大的操作时，这个方式是最有用的。
+
+# 7.事件处理
+
+1）事件监听可以使用 v-on 指令。然而许多事件处理逻辑会更为复杂，所以直接把 JavaScript 代码写在 v-on 指令中是不可行的。因此 v-on 还可以接收一个需要调用的方法名称。除了直接绑定到一个方法，也可以在内联 JavaScript 语句中调用方法。
+
+2）事件修饰符
+
+在事件处理程序中调用 event.preventDefault() 或 event.stopPropagation() 是非常常见的需求。尽管我们可以在方法中轻松实现这点，但更好的方式是：方法只有纯粹的数据逻辑，而不是去处理 DOM 事件细节。
+
+为了解决这个问题，Vue.js 为 v-on 提供了事件修饰符。之前提过，修饰符是由点开头的指令后缀来表示的。
+
+.stop
+
+.prevent
+
+.capture
+
+.self
+
+.once
+
+.passive
+
+注意！使用修饰符时，顺序很重要；相应的代码会以同样的顺序产生。因此，用 v-on:click.prevent.self 会阻止所有的点击，而 v-on:click.self.prevent 只会阻止对元素自身的点击。
+
+3）按键修饰符
+
+在监听键盘事件时，我们经常需要检查常见的键值。Vue 允许为 v-on 在监听键盘事件时添加按键修饰符。
+
+记住所有的 keyCode 比较困难，所以 Vue 为最常用的按键提供了别名。
+
+全部的按键别名：
+
+.enter
+
+.tab
+
+.delete (捕获“删除”和“退格”键)
+
+.esc
+
+.space
+
+.up
+
+.down
+
+.left
+
+.right
+
+可以通过全局 config.keyCodes 对象自定义按键修饰符别名。
+
+4）系统修饰键
+
+可以用如下修饰符来实现仅在按下相应按键时才触发鼠标或键盘事件的监听器：
+
+.ctrl
+
+.alt
+
+.shift
+
+.meta
+
+5）鼠标按钮修饰符
+
+.left
+
+.right
+
+.middle
+
+这些修饰符会限制处理函数仅响应特定的鼠标按钮。
