@@ -1,65 +1,102 @@
 Learning of vue.js
 
 1.介绍
+
 Vue 是一套用于构建用户界面的渐进式框架。与其它大型框架不同的是，Vue 被设计为可以自底向上逐层应用。Vue 的核心库只关注视图层，不仅易于上手，还便于与第三方库或既有项目整合。另一方面，当与现代化的工具链以及各种支持类库结合使用时，Vue 也完全能够为复杂的单页应用提供驱动。
 
 2.起步
+
 1）每个 Vue 应用都需要通过实例化 Vue 来实现。
 语法格式如下：
+
 var vm = new Vue({
+
   // 选项
+  
 })
+
 在 Vue 构造器中有一个el 参数，它是 DOM 元素中的 id
 
 2）如何定义数据对象。
+
 data 用于定义属性，实例中有三个属性分别为：site、url、alexa。
+
 methods 用于定义的函数，可以通过 return 来返回函数值。
+
 {{ }} 用于输出对象属性和函数返回值。
+
 当一个 Vue 实例被创建时，它向 Vue 的响应式系统中加入了其 data 对象中能找到的所有的属性。当这些属性的值发生改变时，html 视图将也会产生相应的变化。
 
 3.模拟语法
+
 1)Vue.js 使用了基于 HTML 的模板语法，允许开发者声明式地将 DOM 绑定至底层 Vue 实例的数据。所有 Vue.js 的模板都是合法的 HTML ，所以能被遵循规范的浏览器和 HTML 解析器解析。在底层的实现上，Vue 将模板编译成虚拟 DOM 渲染函数。结合响应系统，Vue 能够智能地计算出最少需要重新渲染多少组件，并把 DOM 操作次数减到最少。
 
 2）插值
+
 文本
+
 数据绑定最常见的形式就是使用“Mustache”语法 (双大括号) 的文本插值。
+
 HTML
+
 双大括号会将数据解释为普通文本，而非 HTML 代码。为了输出真正的 HTML，你需要使用 v-html 指令。
+
 特性
+
 Mustache 语法不能作用在 HTML 特性上，遇到这种情况应该使用 v-bind 指令。
+
 表达式
+
 迄今为止，在我们的模板中，我们一直都只绑定简单的属性键值。但实际上，对于所有的数据绑定，Vue.js 都提供了完全的 JavaScript 表达式支持。
 
 3）指令
+
 指令 (Directives) 是带有 v- 前缀的特殊特性。指令特性的值预期是单个 JavaScript 表达式 。指令的职责是，当表达式的值改变时，将其产生的连带影响，响应式地作用于 DOM。
+
 参数
+
 一些指令能够接收一个“参数”，在指令名称之后以冒号表示。例如，v-bind 指令可以用于响应式地更新 HTML 特性。
+
 修饰符
+
 修饰符 (Modifiers) 是以半角句号 . 指明的特殊后缀，用于指出一个指令应该以特殊方式绑定。
 
 4）缩写
+
 v- 前缀作为一种视觉提示，用来识别模板中 Vue 特定的特性。当你在使用 Vue.js 为现有标签添加动态行为 (dynamic behavior) 时，v- 前缀很有帮助，然而，对于一些频繁用到的指令来说，就会感到使用繁琐。同时，在构建由 Vue.js 管理所有模板的单页面应用程序 (SPA - single page application) 时，v- 前缀也变得没那么重要了。因此，Vue.js 为 v-bind 和 v-on 这两个最常用的指令，提供了特定简写：
+
 v-bind 缩写：
 
 <!-- 完整语法 -->
+
 <a v-bind:href="url">...</a>
+
 <!-- 缩写 -->
+
 <a :href="url">...</a>
 
 v-on 缩写：
 
 <!-- 完整语法 -->
+
 <a v-on:click="doSomething">...</a>
+
 <!-- 缩写 -->
+
 <a @click="doSomething">...</a>
 
 4.条件语句
+
 1）v-if
+
 在字符串模板中，比如 Handlebars，我们得像这样写一个条件块：
 
 <!-- Handlebars 模板 -->
+
 {{#if ok}}
-  <h1>Yes</h1>
+
+<h1>Yes</h1>
+
 {{/if}}
 
 在 Vue 中，我们使用 v-if 指令实现同样的功能：
@@ -69,52 +106,75 @@ v-on 缩写：
 也可以用 v-else 添加一个“else 块”：
 
 <h1 v-if="ok">Yes</h1>
+
 <h1 v-else>No</h1>
 
 因为 v-if 是一个指令，所以必须将它添加到一个元素上。但是如果想切换多个元素呢？此时可以把一个 <template> 元素当做不可见的包裹元素，并在上面使用 v-if。最终的渲染结果将不包含 <template> 元素。
   
 2）v-else
+
 你可以使用 v-else 指令来表示 v-if 的“else 块”：
 
 <div v-if="Math.random() > 0.5">
-  Now you see me
+
+Now you see me
+
 </div>
+
 <div v-else>
-  Now you don't
+
+Now you don't
+
 </div>
 
 v-else 元素必须紧跟在带 v-if 或者 v-else-if 的元素的后面，否则它将不会被识别。
 
 3）v-else-if
+
 v-else-if，顾名思义，充当 v-if 的“else-if 块”，可以连续使用。类似于 v-else，v-else-if 也必须紧跟在带 v-if 或者 v-else-if 的元素之后。
 
 4）v-show
+
 另一个用于根据条件展示元素的选项是 v-show 指令。用法大致一样：
 
 <h1 v-show="ok">Hello!</h1>
 
 不同的是带有 v-show 的元素始终会被渲染并保留在 DOM 中。v-show 只是简单地切换元素的 CSS 属性 display。
+
 注意！v-show 不支持 <template> 元素，也不支持 v-else。
   
 5）v-if vs v-show
+
 v-if 是“真正”的条件渲染，因为它会确保在切换过程中条件块内的事件监听器和子组件适当地被销毁和重建。
+
 v-if 也是惰性的：如果在初始渲染时条件为假，则什么也不做——直到条件第一次变为真时，才会开始渲染条件块。
+
 相比之下，v-show 就简单得多——不管初始条件是什么，元素总是会被渲染，并且只是简单地基于 CSS 进行切换。
+
 一般来说，v-if 有更高的切换开销，而 v-show 有更高的初始渲染开销。因此，如果需要非常频繁地切换，则使用 v-show 较好；如果在运行时条件很少改变，则使用 v-if 较好。
 
 5.循环语句
+
 1)循环使用 v-for 指令。
+
 v-for 指令需要以 site in sites 形式的特殊语法， sites 是源数据数组并且 site 是数组元素迭代的别名。
+
 v-for 可以绑定数据到数组来渲染一个列表,也可以用 v-for 通过一个对象的属性来迭代。
 
 2)v-for on a <template>
+
 类似于 v-if，你也可以利用带有 v-for 的 <template> 渲染多个元素。比如：
   
 <ul>
-  <template v-for="item in items">
-    <li>{{ item.msg }}</li>
-    <li class="divider" role="presentation"></li>
-  </template>
+
+<template v-for="item in items">
+
+<li>{{ item.msg }}</li>
+
+<li class="divider" role="presentation"></li>
+
+</template>
+
 </ul>
 
 3)v-for with v-if
@@ -122,15 +182,23 @@ v-for 可以绑定数据到数组来渲染一个列表,也可以用 v-for 通过
 当它们处于同一节点，v-for 的优先级比 v-if 更高，这意味着 v-if 将分别重复运行于每个 v-for 循环中。当你想为仅有的一些项渲染节点时，这种优先级的机制会十分有用，如下：
 
 <li v-for="todo in todos" v-if="!todo.isComplete">
-  {{ todo }}
+
+{{ todo }}
+
 </li>
 
 上面的代码只传递了未完成的 todos。
+
 而如果你的目的是有条件地跳过循环的执行，那么可以将 v-if 置于外层元素 (或 <template>)上。如：
  
 <ul v-if="todos.length">
-  <li v-for="todo in todos">
-    {{ todo }}
-  </li>
+
+<li v-for="todo in todos">
+
+{{ todo }}
+
+</li>
+
 </ul>
+
 <p v-else>No todos left!</p>
